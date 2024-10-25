@@ -1,0 +1,38 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  color-scheme: light;
+  --background: 255 255 255;
+  --subtle: 125 125 127;
+  --muted: 177 177 178;
+  --faint: 230 230 231;
+  --primary: 0 0 0;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    color-scheme: dark;
+    --background: 0 0 0;
+    --subtle: 153 156 154;
+    --muted: 70 71 71;
+    --faint: 28 29 28;
+    --primary: 255 255 255;
+  }
+}
+
+* {
+  box-sizing: border-box;
+}
+
+.spin-button-none::-webkit-inner-spin-button,
+.spin-button-none::-webkit-outer-spin-button {
+  appearance: none;
+}
+
+html {
+  /* background-color: rgb(var(--background) / 1); */
+  /* scrollbar-color: rgb(var(--muted) / 1) transparent;  */
+  overflow-x: hidden;
+}
