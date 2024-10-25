@@ -38,7 +38,7 @@ function CalendarView({ role }: { role: Role }) {
   let [month, setMonth] = useState(new Date().toString());
 
   let [tab, setTab] = useQueryState("view", parseAsInteger.withDefault(0));
-  let bookings = useMap<string, SerializedAppointment>();
+  let bookings = useMap<string>();
   let cache = useRef<Map<string, SerializedAppointment[]>>(new Map());
 
   let [loading, setLoading] = useState(true);
