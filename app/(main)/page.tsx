@@ -1,4 +1,4 @@
-import Calendar from "@/app/(main)/calendar";
+import { CalendarMonth, CalendarWeek } from "@/app/(main)/calendar";
 import { LinkButton } from "@/app/components/button";
 import { WeekView } from "@/app/components/calendar";
 import { Line } from "@/app/components/line";
@@ -23,71 +23,14 @@ let Client = dynamic(() => import("@/app/(main)/client"), {
           Book appointments online.
         </p>
         <p className="text-5xl font-medium text-left text-subtle pb-2">
-          The simple way to manage appointments & share bookings links.
+          The simple way to manage appointments & share booking links.
         </p>
       </section>
     );
   },
 });
-export default function () {
-  let bookings: SerializedAppointment[] = [
-    {
-      appointment_time: add(startOfToday(), { hours: 9 }).toString(),
-      created_at: "",
-      updated_at: "",
-      description: "",
-      email: "4@example.com",
-      id: "1",
-      slot: 60,
-      status: "ACCEPTED",
-      worker: "brad",
-    },
-    {
-      appointment_time: add(startOfToday(), { hours: -49 }).toString(),
-      created_at: "",
-      updated_at: "",
-      description: "",
-      email: "email@example.com",
-      id: "12",
-      slot: 60,
-      status: "ACCEPTED",
-      worker: "brad",
-    },
-    {
-      appointment_time: add(startOfToday(), { hours: -64 }).toString(),
-      created_at: "",
-      updated_at: "",
-      description: "",
-      email: "ben@example.com",
-      id: "14",
-      slot: 60,
-      status: "AWAITING",
-      worker: "me",
-    },
-    {
-      appointment_time: add(startOfTomorrow(), { hours: 30 }).toString(),
-      created_at: "",
-      updated_at: "",
-      description: "",
-      email: "james@example.com",
-      id: "2",
-      slot: 60,
-      status: "ACCEPTED",
-      worker: "mike",
-    },
-    {
-      appointment_time: add(startOfToday(), { hours: 74 }).toString(),
-      created_at: "",
-      updated_at: "",
-      description: "",
-      email: "revenue@example.com",
-      id: "3",
-      slot: 60,
-      status: "AWAITING",
-      worker: "me",
-    },
-  ];
 
+export default function () {
   return (
     <main className="px-2">
       <Client />
@@ -145,14 +88,14 @@ export default function () {
           Drag appointments on the far left or right to move between different
           months.
         </Subtle>
-        <Calendar bookings={bookings} />
+        <CalendarMonth />
         <GenericHeader className="text-left text-5xl mt-48 font-semibold">
           Week view included.
         </GenericHeader>
         <Subtle className="text-left text-lg mt-1">
           Change the day and time of day a booking occurs.
         </Subtle>
-        <WeekView vanity mutable bookings={bookings} />
+        <CalendarWeek />
       </section>
 
       <GenericHeader className="text-center text-7xl mt-40 font-semibold mb-10">

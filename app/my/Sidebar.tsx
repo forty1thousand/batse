@@ -52,6 +52,13 @@ export default function ({ user }: { user: User }) {
         </NavigatorButton>
       )}
       <div className="md:mt-auto" />
+      <LinkButton
+        href="mailto:chessinato@gmail.com"
+        variant="text"
+        className="relative h-fit w-full justify-start"
+      >
+        <span className="flex gap-x-2 items-center">Support</span>
+      </LinkButton>
       <div>
         <LocalState initialState={false}>
           {(loading, setLoading) => (

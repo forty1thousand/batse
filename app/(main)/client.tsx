@@ -46,7 +46,7 @@ export default function () {
         <span className="bg-clip-text invert dark:invert-0 text-transparent bg-gradient-to-tl from-rose-500 to-amber-500">
           simple
         </span>{" "}
-        way to manage appointments & share bookings links.
+        way to manage appointments & share booking links.
       </motion.p>
     </section>
   );
