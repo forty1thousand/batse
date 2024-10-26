@@ -452,9 +452,12 @@ let Event = memo<EventProps>(function ({
       }}
     >
       <div className={twJoin("h-full w-1", bright)} />
-      <div className="flex flex-col flex-1">
+      <div className="flex flex-1 items-center h-fit">
         <motion.span
-          className={twJoin("p-0.5 pointer-events-none text-xs", text)}
+          className={twJoin(
+            "p-0.5 pointer-events-none text-xs text-nowrap",
+            text
+          )}
         >
           {date}
         </motion.span>
@@ -680,12 +683,16 @@ function MonthViewEvent({
       onDragStart={(e) => {
         e.dataTransfer.setData("text/plain", appointment.id);
       }}
-      className="w-full pl-1 flex"
+      className="w-full pl-1 flex cursor-crosshair"
     >
       <div className={twJoin("rounded-full size-1.5 my-auto", color)} />
-      <span className="text-[0.65rem] pointer-events-none ml-1 max-w-full text-ellipsis overflow-hidden whitespace-nowrap">
-        {appointment.worker} - {appointment.email}{" "}
+      <span className="text-[0.65rem] pointer-events-none ml-1 max-w-full text-ellipsis overflow-hidden whitespace-nowrap select-none">
         {format(appointment.appointment_time, "p")}
+        {" - "}
+        {format(
+          add(appointment.appointment_time, { minutes: appointment.slot }),
+          "p"
+        )}
       </span>
     </div>
   );

@@ -3,7 +3,7 @@ import { twMerge } from "tailwind-merge";
 import "./globals.css";
 
 export let metadata = {
-  title: "Untitled",
+  title: "Batse",
   icons: {
     icon: [
       {
