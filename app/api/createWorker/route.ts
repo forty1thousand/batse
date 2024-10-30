@@ -3,6 +3,41 @@ import { db } from "@/app/lib/db";
 import { User, validateUser } from "@/app/lib/types";
 import { NextRequest, NextResponse } from "next/server";
 
+export async function PUT(req: NextRequest) {
+  let value = req.cookies.get("zid")?.value;
+
+  if (!value) return NextResponse.json({ error: "Not signed in" });
+
+  let me = decrypt(value);
+
+  let { city, bookings_public, email, tags, username } =
+    (await req.json()) as Pick<
+      User,
+      "city" | "email" | "tags" | "bookings_public" | "name" | "username"
+    >;
+
+  email = email.toLowerCase();
+
+  let { office } = await db
+    .selectFrom("users")
+    .select("office")
+    .where("username", "=", username)
+    .executeTakeFirstOrThrow();
+
+  if (office !== me)
+    return NextResponse.json({ errors: { error: "unauthorized" } });
+
+  await db
+    .updateTable("users")
+    .set({ bookings_public, city, email, tags })
+    .where("username", "=", username)
+    .execute();
+
+  console.log("WORKED");
+
+  return NextResponse.json({});
+}
+
 export async function DELETE(req: NextRequest) {
   let value = req.cookies.get("zid")?.value;
 
@@ -80,6 +115,14 @@ export async function POST(req: NextRequest) {
         role: "You are not an office",
       },
     });
+  else if (!user.has_access)
+    return NextResponse.json({
+      errors: {
+        access: "You don't have access to this service.",
+      },
+    });
+
+  console.log(username);
 
   await db
     .insertInto("users")

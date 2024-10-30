@@ -49,7 +49,7 @@ export async function GET(req: NextRequest) {
         .where("username", "=", username)
         .execute();
 
-    console.log("WORKED");
+    console.log("WORKED", email, username);
 
     // let res = NextResponse.redirect(new URL("/my/profile", new URL(req.url).origin), { status: 302 });
 

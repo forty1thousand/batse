@@ -6,11 +6,12 @@ import { LinkIcon, Plus } from "lucide-react";
 import { LocalState } from "@/app/components/localstate";
 import { Modal } from "@/app/components/modal";
 import { F, Input } from "@/app/components/form";
-import { createWorker, deleteWorker } from "@/app/lib/request";
+import { createWorker, deleteWorker, updateWorker } from "@/app/lib/request";
 import { FormikValues } from "formik";
 import { useRouter } from "next/navigation";
 import { Face } from "@/app/components/face";
 import { Link } from "@/app/components/link";
+import { CheckBox } from "@/app/components/checkbox";
 
 export default function ({
   workers,
@@ -217,6 +218,177 @@ export default function ({
               >
                 <LinkIcon className="size-4" />
               </Button>
+              <LocalState initialState={false}>
+                {(state, setState) => (
+                  <>
+                    <Button
+                      className="py-1"
+                      onClick={setState.bind(null, true)}
+                    >
+                      Edit
+                    </Button>
+                    <Modal open={state} closeModal={setState}>
+                      <F
+                        initialValues={{
+                          email: w.email,
+                          name: w.name ?? "",
+                          city: w.city ?? "",
+                          tags: w.tags ?? "",
+                          publi: w.bookings_public,
+                        }}
+                        onSubmit={async ({ publi, ...values }) => {
+                          try {
+                            await updateWorker({
+                              ...values,
+                              username: w.username,
+                              bookings_public: publi,
+                            });
+                            router.refresh();
+                          } catch {}
+                        }}
+                      >
+                        {({
+                          handleSubmit,
+                          handleBlur,
+                          handleChange,
+                          values,
+                          errors,
+                          touched,
+                          isSubmitting,
+                          setFieldValue,
+                        }) => (
+                          <form
+                            className="grid grid-cols-2 w-80 gap-4"
+                            onSubmit={handleSubmit}
+                          >
+                            <div className="col-span-2 mb-8">
+                              <GenericHeader>Update {w.username}</GenericHeader>
+                              <Subtle>
+                                You can update these values any time.
+                              </Subtle>
+                            </div>
+                            <div className="w-full flex flex-col col-span-2">
+                              <Label
+                                htmlFor="email"
+                                className="font-medium mr-auto"
+                              >
+                                Email
+                              </Label>
+                              <Input
+                                id="email"
+                                placeholder="Email"
+                                className="w-full"
+                                onBlur={handleBlur}
+                                onChange={handleChange}
+                                value={values.email}
+                                invalid={Boolean(errors.email) && touched.email}
+                              />
+                              <Small className="text-destructive first-letter:uppercase">
+                                {touched.email && errors.email}
+                              </Small>
+                            </div>
+                            <div className="w-full flex flex-col col-span-2">
+                              <Label
+                                className="font-medium mr-auto"
+                                htmlFor="name"
+                              >
+                                Name
+                              </Label>
+                              <Input
+                                id="name"
+                                placeholder="Name"
+                                className="w-full"
+                                onBlur={handleBlur}
+                                onChange={handleChange}
+                                value={values.name}
+                                invalid={Boolean(errors.name) && touched.name}
+                              />
+                              <Small className="text-destructive first-letter:uppercase">
+                                {touched.name && errors.name}
+                              </Small>
+                            </div>
+                            <div className="w-full flex flex-col col-span-2">
+                              <Label
+                                className="font-medium mr-auto"
+                                htmlFor="city"
+                              >
+                                City
+                              </Label>
+                              <Input
+                                id="city"
+                                placeholder="City"
+                                className="w-full"
+                                onBlur={handleBlur}
+                                onChange={handleChange}
+                                value={values.city}
+                                invalid={Boolean(errors.city) && touched.city}
+                              />
+                              <Small className="text-destructive first-letter:uppercase">
+                                {touched.city && errors.city}
+                              </Small>
+                            </div>
+                            <div className="w-full flex flex-col col-span-2">
+                              <Label
+                                className="font-medium mr-auto"
+                                htmlFor="tags"
+                              >
+                                Tags
+                              </Label>
+                              <Input
+                                id="tags"
+                                placeholder="Tags"
+                                className="w-full"
+                                onBlur={handleBlur}
+                                onChange={handleChange}
+                                value={values.tags}
+                                invalid={Boolean(errors.tags) && touched.tags}
+                              />
+                              <Small className="text-destructive first-letter:uppercase">
+                                {touched.tags && errors.tags}
+                              </Small>
+                            </div>
+                            <div
+                              id="publi"
+                              className="w-full flex gap-x-2 col-span-2"
+                            >
+                              <CheckBox
+                                checked={values.publi}
+                                onClick={() =>
+                                  setFieldValue("publi", !values.publi)
+                                }
+                              />
+                              <Label htmlFor="publi">
+                                Public Appointments
+                                <Subtle className="text-xs">
+                                  On your booking page people can see available
+                                  times if enabled.
+                                </Subtle>
+                              </Label>
+                            </div>
+                            <div className="flex w-full gap-x-4 mt-16 col-span-2">
+                              <Button
+                                className="flex-1"
+                                type="button"
+                                onClick={setState.bind(null, false)}
+                              >
+                                Cancel
+                              </Button>
+                              <Button
+                                className="flex-1"
+                                type="submit"
+                                variant="outline"
+                                loading={isSubmitting}
+                              >
+                                Update
+                              </Button>
+                            </div>
+                          </form>
+                        )}
+                      </F>
+                    </Modal>
+                  </>
+                )}
+              </LocalState>
               <LocalState initialState={[false, false] as [boolean, boolean]}>
                 {([state, loading], setState) => (
                   <>

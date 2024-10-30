@@ -15,12 +15,14 @@ export function FormHeader({ children, className, ...props }: FormHeaderProps) {
 
 interface GenericHeaderProps extends FormHeaderProps {
   size?: "big" | "medium" | "small";
+  h2?: boolean;
 }
 
 export function GenericHeader({
   children,
   className,
   size = "medium",
+  h2,
   ...props
 }: GenericHeaderProps) {
   let bonus = {
@@ -29,7 +31,14 @@ export function GenericHeader({
     small: "text-2xl",
   }[size];
 
-  return (
+  return h2 ? (
+    <h2
+      className={twMerge("font-medium leading-snug", bonus, className)}
+      {...props}
+    >
+      {children}
+    </h2>
+  ) : (
     <h1
       className={twMerge("font-medium leading-snug", bonus, className)}
       {...props}

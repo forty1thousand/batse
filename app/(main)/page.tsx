@@ -1,10 +1,7 @@
 import { CalendarMonth, CalendarWeek } from "@/app/(main)/calendar";
 import { LinkButton } from "@/app/components/button";
-import { WeekView } from "@/app/components/calendar";
 import { Line } from "@/app/components/line";
 import { GenericHeader, Headline, Subtle } from "@/app/components/text";
-import { SerializedAppointment } from "@/app/lib/types";
-import { add, startOfToday, startOfTomorrow } from "date-fns";
 import { Metadata } from "next";
 import dynamic from "next/dynamic";
 
@@ -22,6 +19,7 @@ let Client = dynamic(() => import("@/app/(main)/client"), {
         <p className="text-7xl lg:text-9xl font-bold mx-auto text-left">
           Book appointments online.
         </p>
+        <Line className="my-4" dotted />
         <p className="text-5xl font-medium text-left text-subtle pb-2">
           The simple way to manage appointments & share booking links.
         </p>
@@ -52,7 +50,7 @@ export default function () {
         <Headline className="font-semibold text-base text-center text-subtle">
           BUILT FOR BUSINESS
         </Headline>
-        <GenericHeader className="text-center text-5xl mt-5 font-semibold">
+        <GenericHeader h2 className="text-center text-5xl mt-5 font-semibold">
           Start accepting bookings{" "}
           <span className="bg-clip-text text-transparent bg-gradient-to-br from-indigo-400 to-fuchsia-500">
             today.
@@ -61,27 +59,33 @@ export default function () {
         <Subtle className="text-center mt-2 text-lg">
           Our software is designed for ease of use and quickness.
         </Subtle>
-        <GenericHeader className="text-left text-2xl mt-16 font-semibold">
-          On your end
-        </GenericHeader>
-        <ul className="mx-20 list-disc list-inside text-subtle text-lg">
-          <li>
-            Share an appointment link & have customer schedule appointments.
-          </li>
-          <li>Create and manage employee profiles.</li>
-          <li>Accept or reject incoming appointments.</li>
-          <li>See and move your appointments around on a calendar.</li>
-        </ul>
-        <GenericHeader className="text-left text-2xl mt-5 font-semibold">
-          On your customers end
-        </GenericHeader>
-        <ul className="mx-20 list-disc list-inside text-subtle text-lg">
-          <li>Create appointments online. </li>
-          <li>Get an email update upon acceptance.</li>
-          <li>Select their choice of time.</li>
-        </ul>
-
-        <GenericHeader className="text-left text-5xl mt-48 font-semibold">
+        <div className="grid grid-cols-2 gap-x-4 mt-16">
+          <div>
+            <GenericHeader h2 className="text-left text-2xl font-semibold">
+              On your end
+            </GenericHeader>
+            <ul className="mx-20 list-disc list-inside text-subtle text-lg">
+              <li>
+                Share an appointment link & have customers schedule
+                appointments.
+              </li>
+              <li>Create and manage employee profiles.</li>
+              <li>Accept or reject incoming appointments.</li>
+              <li>See and move your appointments around on a calendar.</li>
+            </ul>
+          </div>
+          <div>
+            <GenericHeader h2 className="text-left text-2xl mt-5 font-semibold">
+              On your customers end
+            </GenericHeader>
+            <ul className="mx-20 list-disc list-inside text-subtle text-lg">
+              <li>Create appointments online.</li>
+              <li>Get an email update upon acceptance.</li>
+              <li>Select their choice of time.</li>
+            </ul>
+          </div>
+        </div>
+        <GenericHeader h2 className="text-left text-5xl mt-48 font-semibold">
           Drag and drop appointments.
         </GenericHeader>
         <Subtle className="text-left text-lg mt-1 mb-14">
@@ -89,7 +93,7 @@ export default function () {
           months.
         </Subtle>
         <CalendarMonth />
-        <GenericHeader className="text-left text-5xl mt-48 font-semibold">
+        <GenericHeader h2 className="text-left text-5xl mt-48 font-semibold">
           Week view included.
         </GenericHeader>
         <Subtle className="text-left text-lg mt-1">
@@ -98,7 +102,10 @@ export default function () {
         <CalendarWeek />
       </section>
 
-      <GenericHeader className="text-center text-7xl mt-40 font-semibold mb-10">
+      <GenericHeader
+        h2
+        className="text-center text-7xl mt-40 font-semibold mb-10"
+      >
         Select your plan.
       </GenericHeader>
       <section
@@ -111,7 +118,7 @@ export default function () {
             <Line className="flex-1" />
           </div>
           <div className="p-4 flex flex-col">
-            <GenericHeader className="text-center font-bold text-7xl">
+            <GenericHeader h2 className="text-center font-bold text-7xl">
               $70{" "}
               <span className="text-sm text-muted font-medium">/ One time</span>
             </GenericHeader>
@@ -131,7 +138,7 @@ export default function () {
             <Line className="flex-1" />
           </div>
           <div className="p-4 flex flex-col">
-            <GenericHeader className="text-center font-bold text-7xl">
+            <GenericHeader h2 className="text-center font-bold text-7xl">
               $100{" "}
               <span className="text-sm text-muted font-medium">/ One time</span>
             </GenericHeader>
@@ -153,7 +160,7 @@ export default function () {
             <Line className="flex-1" />
           </div>
           <div className="p-4 flex flex-col">
-            <GenericHeader className="text-center font-bold text-7xl">
+            <GenericHeader h2 className="text-center font-bold text-7xl">
               $145{" "}
               <span className="text-sm text-muted font-medium">/ One time</span>
             </GenericHeader>

@@ -1,4 +1,5 @@
 "use client";
+import { Line } from "@/app/components/line";
 import { motion } from "framer-motion";
 
 export default function () {
@@ -35,6 +36,7 @@ export default function () {
           Book appointments online.
         </motion.p>
       </div>
+      <Line className="my-4" dotted />
       <motion.p
         initial={{ clipPath: "inset(100% 0 0 0)" }}
         animate={{ clipPath: "inset(0 0 0 0)" }}

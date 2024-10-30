@@ -9,17 +9,19 @@ export default async function ({
 }) {
   let res = await db
     .selectFrom("users")
-    .select(["office", "name", "slot"])
+    .select(["role", "name", "slot", "bookings_public"])
     .where("username", "=", username)
     .executeTakeFirst();
 
   if (!res) return notFound();
 
-  let { name, slot } = res;
+  let { name, slot, role, bookings_public } = res;
+
+  if (role !== "WORKER") return notFound();
 
   return (
     <div className="p-4 md:w-4/5 w-full mx-auto">
-      <Client data={{ name, slot, username }} />
+      <Client data={{ name, slot, username, bookings_public }} />
     </div>
   );
 }

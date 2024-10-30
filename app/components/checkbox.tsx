@@ -1,6 +1,5 @@
 "use client";
 import { Check } from "lucide-react";
-import { forwardRef } from "react";
 import { twMerge } from "tailwind-merge";
 
 interface CheckBoxProps extends React.ComponentProps<"button"> {
@@ -15,7 +14,7 @@ export function CheckBox({ checked, className, id, ...props }: CheckBoxProps) {
       data-checked={checked}
       aria-checked={checked}
       className={twMerge(
-        "peer group transition shadow focus:outline outline-offset-1 outline-outline w-[14px] h-[14px] rounded data-[checked=false]:border border-muted inline-block data-[checked=true]:bg-primary",
+        "peer group transition border shadow focus:outline outline-offset-1 outline-outline w-[14px] h-[14px] rounded data-[checked=false]:border border-muted/80 inline-block data-[checked=true]:bg-primary",
         className
       )}
       defaultChecked

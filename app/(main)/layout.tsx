@@ -26,6 +26,11 @@ export default function ({ children }: React.PropsWithChildren) {
               Sign up
             </a>
           </li>
+          <li>
+            <a href="/search" className="hover:underline">
+              Search
+            </a>
+          </li>
         </ul>
       </footer>
     </Container>

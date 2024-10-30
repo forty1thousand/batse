@@ -1,5 +1,6 @@
 "use client";
 import { Button } from "@/app/components/button";
+import { WeekView } from "@/app/components/calendar";
 import { F, Input, Radio, Textarea } from "@/app/components/form";
 import { Line } from "@/app/components/line";
 import {
@@ -9,16 +10,35 @@ import {
 } from "@/app/components/listbox";
 import { Modal } from "@/app/components/modal";
 import { GenericHeader, Label, Subtle } from "@/app/components/text";
-import { createAppointment } from "@/app/lib/request";
+import {
+  createAppointment,
+  getAppointments,
+  getMyAppointments,
+} from "@/app/lib/request";
 import { Listbox, RadioGroup } from "@headlessui/react";
-import { add, eachDayOfInterval, format, startOfToday, sub } from "date-fns";
+import {
+  add,
+  eachDayOfInterval,
+  endOfMonth,
+  format,
+  startOfMonth,
+  startOfToday,
+  sub,
+} from "date-fns";
 import { CheckCircle, ChevronLeft, ChevronRight } from "lucide-react";
 import { useState } from "react";
+import useSWR from "swr";
 
 export default function ({
-  data: { slot, name, username },
+  data: { slot, name, username, bookings_public },
 }: {
-  data: { [_: string]: any; slot: number | null };
+  data: {
+    [_: string]: any;
+    slot: number | null;
+    bookings_public: boolean;
+    username: string;
+    name: string | null;
+  };
 }) {
   let [start, setStart] = useState(startOfToday());
 
@@ -35,6 +55,15 @@ export default function ({
     setStart(add(start, { weeks: 1 }));
   }
 
+  let { data } = useSWR(
+    [
+      startOfMonth(sub(start, { months: 1 })),
+      endOfMonth(add(start, { months: 1 })),
+      username,
+    ],
+    ([x, y, z]) => getAppointments(x, y, z)
+  );
+
   let [open, setOpen] = useState(false);
 
   return (
@@ -44,21 +73,33 @@ export default function ({
         description: "",
         day: "",
         hour: "0",
+        time: undefined as undefined | string,
         slot: String(slot ?? 60),
       }}
-      onSubmit={async ({ description, email, slot, day, hour }) => {
+      onSubmit={async ({ description, email, slot, day, hour, time }) => {
         await new Promise((res) => setTimeout(res, 100));
 
         try {
-          let res = await createAppointment({
-            description,
-            email,
-            slot: Number(slot),
-            worker: username,
-            appointment_time: add(new Date(day), {
-              minutes: Number(hour) * Number(slot),
-            }).toString(),
-          });
+          let res;
+
+          if (time)
+            res = await createAppointment({
+              description,
+              email,
+              slot: Number(slot),
+              worker: username,
+              appointment_time: time,
+            });
+          else
+            res = await createAppointment({
+              description,
+              email,
+              slot: Number(slot),
+              worker: username,
+              appointment_time: add(new Date(day), {
+                minutes: Number(hour) * Number(slot),
+              }).toString(),
+            });
 
           if (res.ok) setOpen(true);
         } catch {}
@@ -95,7 +136,7 @@ export default function ({
             </GenericHeader>
           </div>
           <div className="grid grid-cols-1 gap-y-4">
-            <GenericHeader>General information</GenericHeader>
+            <GenericHeader h2>General information</GenericHeader>
             <div className="w-full">
               <Label htmlFor="email" className="font-medium">
                 Email
@@ -125,52 +166,62 @@ export default function ({
               />
             </div>
             <Line className="my-4" />
-            <GenericHeader>Booking time</GenericHeader>
-            <div className="w-fit grid grid-cols-1">
-              <div className="flex items-center mb-2">
-                <span className="text-sm pointer-events-none">
-                  {format(start, "LLLL yyyy")}
-                </span>
-                <Button
-                  variant="text"
-                  type="button"
-                  disabled={start <= new Date()}
-                  onClick={minusWeek}
-                  className="rounded-full size-8 ml-auto"
-                >
-                  <ChevronLeft className="size-4" />
-                </Button>
-                <Button
-                  variant="text"
-                  type="button"
-                  onClick={addWeek}
-                  className="rounded-full size-8"
-                >
-                  <ChevronRight className="size-4" />
-                </Button>
-              </div>
-              <RadioGroup
-                onChange={setFieldValue.bind(null, "day")}
-                className="flex gap-x-2"
-              >
-                {week.map((day) => (
-                  <Radio
-                    className="font-mono"
-                    value={day.toDateString()}
-                    key={day.toDateString()}
-                  >
-                    {format(day, "dd E")}
-                  </Radio>
-                ))}
-              </RadioGroup>
-            </div>
             <div>
-              <GenericHeader className="pointer-events-none text-base">
+              <GenericHeader h2>Booking time</GenericHeader>
+              {bookings_public && (
+                <Subtle>
+                  Your appointment is the blue one. Other appointments and
+                  grayed out.
+                </Subtle>
+              )}
+            </div>
+            {!bookings_public && (
+              <div className="w-fit grid grid-cols-1">
+                <div className="flex items-center mb-2">
+                  <span className="text-sm pointer-events-none">
+                    {format(start, "LLLL yyyy")}
+                  </span>
+                  <Button
+                    variant="text"
+                    type="button"
+                    disabled={start <= new Date()}
+                    onClick={minusWeek}
+                    className="rounded-full size-8 ml-auto"
+                  >
+                    <ChevronLeft className="size-4" />
+                  </Button>
+                  <Button
+                    variant="text"
+                    type="button"
+                    onClick={addWeek}
+                    className="rounded-full size-8"
+                  >
+                    <ChevronRight className="size-4" />
+                  </Button>
+                </div>
+                <RadioGroup
+                  onChange={setFieldValue.bind(null, "day")}
+                  className="flex gap-x-2"
+                >
+                  {week.map((day) => (
+                    <Radio
+                      className="font-mono"
+                      value={day.toDateString()}
+                      key={day.toDateString()}
+                    >
+                      {format(day, "dd E")}
+                    </Radio>
+                  ))}
+                </RadioGroup>
+              </div>
+            )}
+            <div>
+              <GenericHeader h2 className="pointer-events-none text-base">
                 Duration
               </GenericHeader>
               <Listbox onChange={setFieldValue.bind(null, "slot")}>
                 <ListboxButton>{values.slot} Minutes</ListboxButton>
-                <ListboxOptions>
+                <ListboxOptions className="z-50">
                   <ListboxOption value={15}>15 Minutes</ListboxOption>
                   <ListboxOption value={30}>30 Minutes</ListboxOption>
                   <ListboxOption value={45}>45 Minutes</ListboxOption>
@@ -178,44 +229,77 @@ export default function ({
                 </ListboxOptions>
               </Listbox>
             </div>
-            <div>
-              <GenericHeader className="pointer-events-none text-base">
-                Time
-              </GenericHeader>
-              <Listbox onChange={setFieldValue.bind(null, "hour")}>
-                <ListboxButton>
-                  {format(
-                    add(startOfToday(), {
-                      minutes: Number(values.hour) * Number(values.slot),
-                    }),
-                    "hh:mm a"
-                  )}
-                </ListboxButton>
-                <ListboxOptions>
-                  {Array.from({ length: 200 }).map(
-                    (_, i) =>
-                      i * Number(values.slot) < 24 * 60 && (
-                        <ListboxOption key={`${i} why`} value={i}>
-                          {format(
-                            add(startOfToday(), {
-                              minutes: i * Number(values.slot),
-                            }),
-                            "hh:mm a"
-                          )}
-                        </ListboxOption>
-                      )
-                  )}
-                </ListboxOptions>
-              </Listbox>
-            </div>
+            {!bookings_public && (
+              <div>
+                <GenericHeader className="pointer-events-none text-base">
+                  Time
+                </GenericHeader>
+                <Listbox onChange={setFieldValue.bind(null, "hour")}>
+                  <ListboxButton>
+                    {format(
+                      add(startOfToday(), {
+                        minutes: Number(values.hour) * Number(values.slot),
+                      }),
+                      "hh:mm a"
+                    )}
+                  </ListboxButton>
+                  <ListboxOptions>
+                    {Array.from({ length: 200 }).map(
+                      (_, i) =>
+                        i * Number(values.slot) < 24 * 60 && (
+                          <ListboxOption key={`${i} why`} value={i}>
+                            {format(
+                              add(startOfToday(), {
+                                minutes: i * Number(values.slot),
+                              }),
+                              "hh:mm a"
+                            )}
+                          </ListboxOption>
+                        )
+                    )}
+                  </ListboxOptions>
+                </Listbox>
+              </div>
+            )}
           </div>
+          {bookings_public && (
+            <>
+              <div className="mt-4" />
+              <WeekView
+                stat
+                onChangeDate={(newDate) => setStart(new Date(newDate))}
+                onChange={(apps) =>
+                  setFieldValue(
+                    "time",
+                    apps.find((a) => a.id == "NEW")?.appointment_time
+                  )
+                }
+                bookings={[...(data ?? [])].concat([
+                  {
+                    appointment_time: start.toString(),
+                    created_at: new Date().toString(),
+                    updated_at: new Date().toString(),
+                    //@ts-ignore
+                    email: values.email,
+                    id: "NEW" as const,
+                    slot: Number(values.slot),
+                    status: "AWAITING",
+                    worker: "",
+                  },
+                ])}
+              />
+              <div className="mt-4" />
+            </>
+          )}
           <Button
             loading={isSubmitting}
             className="mt-auto w-full"
             variant="seethru"
             type="submit"
             disabled={
-              values.day == "" || values.description == "" || values.email == ""
+              values.description == "" ||
+              values.email == "" ||
+              (values.day == "" && values.time == "")
             }
           >
             Schedule with {name ?? username}

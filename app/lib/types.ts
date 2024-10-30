@@ -38,6 +38,7 @@ export interface UserTable {
   created_at: Generated<Date>;
   updated_at: Generated<Date>;
   combined_text: string | null;
+  bookings_public: Generated<boolean>;
 }
 
 export interface AppointmentsTable {
@@ -65,7 +66,7 @@ export interface Appointment {
 }
 
 export interface SerializedAppointment {
-  id: string;
+  id: string | "NEW";
   email: string;
   worker: string;
   status: Status;
@@ -96,6 +97,7 @@ export interface User {
   workers: string[];
   has_access: boolean;
   price_id: string | null;
+  bookings_public: boolean;
   created_at: Date;
   updated_at: Date;
 }
@@ -154,12 +156,15 @@ export async function validateUser({
   return errors ? output : null;
 }
 
-export function omitSensitiveFields<T extends User>(u: T) {
-  let { email, price_id, has_access, ...res } = u;
+export function omitSensitiveFields<
+  T extends { email?: any; price_id?: any; has_access?: any; description?: any }
+>(u: T) {
+  let { email, price_id, has_access, description, ...res } = u;
 
   Reflect.deleteProperty(res, "email");
   Reflect.deleteProperty(res, "price_id");
   Reflect.deleteProperty(res, "has_access");
+  Reflect.deleteProperty(res, "description");
 
   return res;
 }

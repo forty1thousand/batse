@@ -61,6 +61,22 @@ export async function getMyAppointments(start: Date, end: Date) {
   return <SerializedAppointment[]>(await res.json()).myAppointments;
 }
 
+export async function getAppointments(
+  start: Date,
+  end: Date,
+  username: string
+) {
+  let res = await fetch("/api/getAppointments", {
+    method: "POST",
+    body: JSON.stringify({ start, end, username }),
+    credentials: "same-origin",
+  });
+
+  return <Omit<SerializedAppointment, "email" | "description">[]>(
+    (await res.json()).appointments
+  );
+}
+
 export async function getSearchResults(query: string, page: number) {
   let res = await fetch("/api/search", {
     method: "POST",
@@ -77,10 +93,20 @@ export async function logout() {
 }
 
 export async function createWorker(
-  fields: Pick<User, "city" | "email" | "username" | "tags">
+  fields: Pick<User, "city" | "email" | "username" | "tags" | "name">
 ) {
   return await fetch("/api/createWorker", {
     method: "POST",
+    body: JSON.stringify(fields),
+    credentials: "same-origin",
+  });
+}
+
+export async function updateWorker(
+  fields: Pick<User, "city" | "email" | "tags" | "bookings_public" | "name" | "username">
+) {
+  return await fetch("/api/createWorker", {
+    method: "PUT",
     body: JSON.stringify(fields),
     credentials: "same-origin",
   });

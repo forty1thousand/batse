@@ -31,7 +31,7 @@ export async function POST(req: NextRequest) {
     },
     body: JSON.stringify({
       to: email,
-      from: "Batse <onboarding@resend.dev>",
+      from: "Batse <onboarding@batse.app>",
       subject: "Batse - Verify your account",
       text: `Here is your signin link http://127.0.0.1:3000/magic/?magic=${encrypt(
         JSON.stringify({ email, username, role, count })

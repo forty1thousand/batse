@@ -151,13 +151,15 @@ export function WeekView({
   onChangeDate,
   start,
   vanity = false,
+  stat = false,
 }: {
-  bookings: SerializedAppointment[];
+  bookings: any[];
   mutable?: boolean;
-  onChange?(newBookings: SerializedAppointment[]): void;
+  onChange?(newBookings: any[]): void;
   onChangeDate?(newDate: string): void;
   start?: string;
   vanity?: boolean;
+  stat?: boolean;
 }) {
   let [currentWeek, setCurrentWeek] = useState(
     format(start ?? startOfToday(), "RRRR-II")
@@ -200,12 +202,18 @@ export function WeekView({
           </h2>
           <Button
             className="rounded-full ml-auto"
+            type="button"
             variant="text"
             onClick={previousWeek}
           >
             <ChevronLeftIcon className="size-4" />
           </Button>
-          <Button className="rounded-full" variant="text" onClick={nextWeek}>
+          <Button
+            type="button"
+            className="rounded-full"
+            variant="text"
+            onClick={nextWeek}
+          >
             <ChevronRightIcon className="size-4" />
           </Button>
         </div>
@@ -273,7 +281,9 @@ export function WeekView({
                       firstDay={days[0].toString()}
                       appointments={bookings}
                       onChange={onChange ?? (() => null)}
-                      mutable={mutable}
+                      mutable={mutable || appointment.id == "NEW"}
+                      stat={stat}
+                      movable={appointment.id == "NEW"}
                     />
                   )
                 );
@@ -295,6 +305,8 @@ interface EventProps {
   firstDay: string;
   mutable: boolean;
   week: string;
+  stat?: boolean;
+  movable?: boolean;
 }
 
 let Event = memo<EventProps>(function ({
@@ -305,6 +317,8 @@ let Event = memo<EventProps>(function ({
   appointments: bookings,
   mutable,
   week,
+  stat = false,
+  movable = false,
 }) {
   let y = useMotionValue(0);
   let x = useMotionValue(0);
@@ -333,6 +347,11 @@ let Event = memo<EventProps>(function ({
       [dull, bright, text] = ["bg-warn/30", "bg-warn", "text-warn"];
       break;
   }
+
+  if (stat)
+    [dull, bright, text] = ["bg-subtle/10", "bg-subtle/70", "text-subtle"];
+  if (movable)
+    [dull, bright, text] = ["bg-outline/15", "bg-outline/90", "text-outline"];
 
   let date = useTransform(y, (value) => {
     let res = new Date(appointment.appointment_time);
@@ -420,49 +439,65 @@ let Event = memo<EventProps>(function ({
   };
 
   return (
-    <motion.div
-      drag={mutable}
-      dragMomentum={false}
-      dragConstraints={constraintsRef}
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      className={twJoin(
-        "absolute self-center rounded w-[14.2857%] overflow-clip flex z-[8] h-1/2 backdrop-blur",
-        mutable && "cursor-grab",
-        dull
-      )}
-      onDragEnd={handleDragEnd}
-      onDrag={(_, info) => {
-        let deltaX = info.delta.x;
-        let currentX = x.get();
-        let wi = constraintsRef.current?.getBoundingClientRect().width ?? 912;
+    <>
+      <motion.div
+        drag
+        dragMomentum={false}
+        dragConstraints={constraintsRef}
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        className={twJoin(
+          "absolute self-center rounded w-[14.2857%] overflow-clip flex z-[8] h-1/2 backdrop-blur",
+          mutable && "cursor-grab",
+          dull
+        )}
+        onDragEnd={handleDragEnd}
+        onDrag={(_, info) => {
+          let deltaX = info.delta.x;
+          let currentX = x.get();
+          let wi = constraintsRef.current?.getBoundingClientRect().width ?? 912;
 
-        let m = wi / 7;
+          let m = wi / 7;
 
-        let snappedX = Math.round((currentX + deltaX) / m) * m;
+          let snappedX = Math.round((currentX + deltaX) / m) * m;
 
-        x.set(snappedX);
-      }}
-      whileTap={mutable ? { cursor: "grabbing", scale: 0.95 } : undefined}
-      style={{
-        height: `${(100 / 24) * (appointment.slot / 60)}%` /* 1 hour */,
-        touchAction: "none",
-        x,
-        y,
-      }}
-    >
-      <div className={twJoin("h-full w-1", bright)} />
-      <div className="flex flex-1 items-center h-fit">
-        <motion.span
-          className={twJoin(
-            "p-0.5 pointer-events-none text-xs text-nowrap",
-            text
-          )}
-        >
-          {date}
-        </motion.span>
-      </div>
-    </motion.div>
+          x.set(snappedX);
+        }}
+        whileTap={mutable ? { cursor: "grabbing", scale: 0.95 } : undefined}
+        style={{
+          height: `${(100 / 24) * (appointment.slot / 60)}%` /* 1 hour */,
+          touchAction: "none",
+          x,
+          y,
+        }}
+      >
+        <div className={twJoin("h-full w-1", bright)} />
+        <div className="flex flex-1 items-center h-fit">
+          <motion.span
+            className={twJoin(
+              "p-0.5 pointer-events-none text-xs text-nowrap",
+              text
+            )}
+          >
+            {date}
+          </motion.span>
+        </div>
+      </motion.div>
+      <motion.div
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        className={twJoin(
+          "absolute self-center w-[14.2857%] overflow-clip flex z-0 h-1/2",
+          !mutable && "z-20"
+        )}
+        style={{
+          height: `${(100 / 24) * (appointment.slot / 60)}%` /* 1 hour */,
+          touchAction: "none",
+          x,
+          y,
+        }}
+      />
+    </>
   );
 });
 

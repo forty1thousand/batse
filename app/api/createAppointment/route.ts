@@ -28,7 +28,7 @@ export async function POST(req: NextRequest) {
     },
     body: JSON.stringify({
       to: email,
-      from: "Batse <onboarding@resend.dev>",
+      from: "Batse <onboarding@batse.app>",
       subject: "Batse - Scheduled appointment with " + worker,
       text: `You made an appointment with ${worker}. As of now it is happening on ${format(
         appointment_time,

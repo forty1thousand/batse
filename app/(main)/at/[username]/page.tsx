@@ -56,9 +56,11 @@ export default async function ({
         </div>
       </div>
       <div className="flex items-center gap-x-4">
-        <LinkButton href={`/book/${user.username}`} variant="seethru">
-          <Mail className="size-4 mr-2" /> Book appointment
-        </LinkButton>
+        {user.role == "WORKER" && (
+          <LinkButton href={`/book/${user.username}`} variant="seethru">
+            <Mail className="size-4 mr-2" /> Book appointment
+          </LinkButton>
+        )}
       </div>
       <div className="w-full min-h-96 rounded-lg border border-faint mt-4 shadow-sm">
         <p className="p-1.5 font-medium">About</p>
@@ -79,9 +81,9 @@ export default async function ({
                   >
                     <Face
                       name={v.name ?? v.username}
-                      href={`/at/${v.username}`}
+                      href={`/book/${v.username}`}
                     />
-                    <Link gray href={`/at/${v.username}`}>
+                    <Link gray href={`/book/${v.username}`}>
                       {v.name ?? v.username}
                     </Link>
                   </li>
