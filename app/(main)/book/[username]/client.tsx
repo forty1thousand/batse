@@ -170,8 +170,8 @@ export default function ({
               <GenericHeader h2>Booking time</GenericHeader>
               {bookings_public && (
                 <Subtle>
-                  Your appointment is the blue one. Other appointments and
-                  grayed out.
+                  Your appointment is the blue one. Drag it to the date and time
+                  you desire. Other's appointments are grayed out.
                 </Subtle>
               )}
             </div>

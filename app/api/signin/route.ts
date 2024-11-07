@@ -17,11 +17,11 @@ export async function POST(req: NextRequest) {
 
   let { username, role } = res;
 
-  let { count } = await db
+  let { count } = (await db
     .selectFrom("tokens")
     .select("count")
     .where("username", "=", username)
-    .executeTakeFirstOrThrow();
+    .executeTakeFirst()) ?? { count: 0 };
 
   await fetch("https://api.resend.com/emails", {
     method: "POST",
@@ -33,7 +33,7 @@ export async function POST(req: NextRequest) {
       to: email,
       from: "Batse <onboarding@batse.app>",
       subject: "Batse - Verify your account",
-      text: `Here is your signin link http://127.0.0.1:3000/magic/?magic=${encrypt(
+      text: `Here is your signin link ${process.env.NEXT_PUBLIC_BASE_URL!}/magic/?magic=${encrypt(
         JSON.stringify({ email, username, role, count })
       )}`,
     }),

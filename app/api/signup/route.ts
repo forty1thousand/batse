@@ -32,7 +32,7 @@ export async function POST(req: NextRequest) {
       to: email,
       from: "Batse <onboarding@batse.app>",
       subject: "Batse - Verify your account",
-      text: `Visit this magic link to verify your account! http://127.0.0.1:3000/magic/signup/?magic=${encrypt(
+      text: `Visit this magic link to verify your account! ${process.env.NEXT_PUBLIC_BASE_URL!}/magic/signup/?magic=${encrypt(
         data
       )}`,
     }),

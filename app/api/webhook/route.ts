@@ -5,8 +5,6 @@ import Stripe from "stripe";
 
 let stripe = new Stripe(process.env.STRIPE_SECRET!);
 
-let priceIds = ["price_1PakxcE6c6qG24dC0f3cJQ0E"];
-
 export async function POST(req: NextRequest) {
   let body = await req.text();
 

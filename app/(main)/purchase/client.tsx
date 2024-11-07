@@ -39,7 +39,7 @@ export default function () {
               <li>Regular support</li>
             </ul>
             <LinkButton
-              href={`https://buy.stripe.com/test_6oEg0y89J0n34LKcMP?prefilled_email=${email}`}
+              href={`https://buy.stripe.com/8wM8yi4QF7Ozc484gi?prefilled_email=${email}`}
               target="_blank"
               rel="noopener noreferrer"
               className="mt-auto"
@@ -64,7 +64,7 @@ export default function () {
               <li>Regular support</li>
             </ul>
             <LinkButton
-              href={`https://buy.stripe.com/test_6oEg0y2Pp9XD2DC5ko?prefilled_email=${email}`}
+              href={`https://buy.stripe.com/28obKu0Ap9WHd8cbIL?prefilled_email=${email}`}
               target="_blank"
               rel="noopener noreferrer"
               className="mt-auto"
@@ -91,7 +91,7 @@ export default function () {
               <li>Premium support</li>
             </ul>
             <LinkButton
-              href={`https://buy.stripe.com/test_5kA5lUdu3b1H3HG4gh?prefilled_email=${email}`}
+              href={`https://buy.stripe.com/6oEeWGerf7Oz8RWbIJ?prefilled_email=${email}`}
               target="_blank"
               rel="noopener noreferrer"
               className="mt-auto"

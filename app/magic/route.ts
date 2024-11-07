@@ -40,7 +40,6 @@ export async function GET(req: NextRequest) {
     if (newCount > count) throw null;
 
     if (count == 0) {
-      await db.insertInto("users").values({ email, username, role }).execute();
       await db.insertInto("tokens").values({ username, count: 1 }).execute();
     } else
       await db

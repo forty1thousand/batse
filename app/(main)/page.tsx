@@ -59,7 +59,7 @@ export default function () {
         <Subtle className="text-center mt-2 text-lg">
           Our software is designed for ease of use and quickness.
         </Subtle>
-        <div className="grid grid-cols-2 gap-x-4 mt-16">
+        <div className="grid lg:grid-cols-2 gap-x-4 mt-16">
           <div>
             <GenericHeader h2 className="text-left text-2xl font-semibold">
               On your end
