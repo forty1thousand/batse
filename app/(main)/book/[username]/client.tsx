@@ -10,11 +10,7 @@ import {
 } from "@/app/components/listbox";
 import { Modal } from "@/app/components/modal";
 import { GenericHeader, Label, Subtle } from "@/app/components/text";
-import {
-  createAppointment,
-  getAppointments,
-  getMyAppointments,
-} from "@/app/lib/request";
+import { createAppointment, getAppointments } from "@/app/lib/request";
 import { Listbox, RadioGroup } from "@headlessui/react";
 import {
   add,
@@ -131,8 +127,8 @@ export default function ({
           </Modal>
           <div className="flex items-center gap-x-2">
             <Line className="flex-1" />
-            <GenericHeader className="text-5xl font-semibold text-right">
-              Book
+            <GenericHeader className="text-2xl font-semibold text-right">
+              Book with {name}
             </GenericHeader>
           </div>
           <div className="grid grid-cols-1 gap-y-4">
@@ -268,12 +264,15 @@ export default function ({
               <WeekView
                 stat
                 onChangeDate={(newDate) => setStart(new Date(newDate))}
-                onChange={(apps) =>
+                onChange={(apps) => {
                   setFieldValue(
                     "time",
-                    apps.find((a) => a.id == "NEW")?.appointment_time
-                  )
-                }
+                    apps.find((a) => a.id == "NEW")?.appointment_time.toString()
+                  );
+                  console.log(
+                    apps.find((a) => a.id == "NEW")?.appointment_time.toString()
+                  );
+                }}
                 bookings={[...(data ?? [])].concat([
                   {
                     appointment_time: start.toString(),
