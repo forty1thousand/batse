@@ -680,7 +680,7 @@ export function MonthView({
                       mutable={mutable}
                       appointment={{
                         ...v,
-                        appointment_time: v.appointment_time.toString(),
+                        appointment_time: v.appointment_time.toISOString(),
                       }}
                     />
                   ))}

@@ -2,12 +2,12 @@
 import {
   Appointment,
   NewAppointment,
-  Role,
   SearchResults,
   SerializedAppointment,
   User,
   UserTable,
 } from "@/app/lib/types";
+import { sub } from "date-fns";
 
 export async function signupEmail({
   email,
@@ -44,9 +44,16 @@ export async function updateProfile(
 export async function updateAppointments(
   apps: (Appointment | SerializedAppointment)[]
 ) {
+  let ap = apps.map((a) => ({
+    ...a,
+    appointment_time: sub(a.appointment_time, {
+      minutes: new Date().getTimezoneOffset(),
+    }).toISOString(),
+  }));
+
   return await fetch("/api/updateAppointments", {
     method: "POST",
-    body: JSON.stringify(apps),
+    body: JSON.stringify(ap),
     credentials: "same-origin",
   });
 }
@@ -103,7 +110,10 @@ export async function createWorker(
 }
 
 export async function updateWorker(
-  fields: Pick<User, "city" | "email" | "tags" | "bookings_public" | "name" | "username">
+  fields: Pick<
+    User,
+    "city" | "email" | "tags" | "bookings_public" | "name" | "username"
+  >
 ) {
   return await fetch("/api/createWorker", {
     method: "PUT",
@@ -120,10 +130,16 @@ export async function deleteWorker(username: string) {
   });
 }
 
-export async function createAppointment(data: NewAppointment) {
+export async function createAppointment({
+  appointment_time,
+  ...data
+}: NewAppointment) {
   return await fetch("/api/createAppointment", {
     method: "POST",
-    body: JSON.stringify(data),
+    body: JSON.stringify({
+      ...data,
+      appointment_time: appointment_time,
+    }),
     credentials: "same-origin",
   });
 }

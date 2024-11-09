@@ -42,25 +42,24 @@ export async function POST(req: NextRequest) {
     }
   });
 
-  appointments.forEach(
-    async ({ email, worker, appointment_time, status }) =>
-      await fetch("https://api.resend.com/emails", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${process.env.RESEND_TOKEN}`,
-        },
-        body: JSON.stringify({
-          to: email,
-          from: "Batse <onboarding@batse.app>",
-          subject: `Batse - Appointment with ${worker} updated!`,
-          text: `You made an appointment with ${worker}. It is ${status.toLowerCase()}. It has also been updated to happen on ${format(
-            appointment_time,
-            "MMMM do yyyy"
-          )} at ${format(appointment_time, "hh:mm a")}`,
-        }),
-      })
-  );
+  appointments.forEach(async ({ email, worker, appointment_time, status }) => {
+    await fetch("https://api.resend.com/emails", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${process.env.RESEND_TOKEN}`,
+      },
+      body: JSON.stringify({
+        to: email,
+        from: "Batse <onboarding@batse.app>",
+        subject: `Batse - Appointment with ${worker} updated!`,
+        text: `You made an appointment with ${worker}. It is ${status.toLowerCase()}. It has also been updated to happen on ${format(
+          appointment_time,
+          "MMMM do yyyy"
+        )} at ${format(appointment_time, "hh:mm a")}`,
+      }),
+    })
+  });
 
   return NextResponse.json({});
 }

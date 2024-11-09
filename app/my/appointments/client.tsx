@@ -18,6 +18,7 @@ import {
 } from "@/app/components/tabs";
 import { GenericHeader, Small, Subtle } from "@/app/components/text";
 import { getMyAppointments, updateAppointments } from "@/app/lib/request";
+import { deserializeAppointment, serializeAppointment } from "@/app/lib/serial";
 import { Role, SerializedAppointment, Status } from "@/app/lib/types";
 import { useMap } from "@uidotdev/usehooks";
 import {
@@ -161,12 +162,15 @@ export default function ({ role }: { role: Role }) {
     ([start, end]) => getMyAppointments(start, end)
   );
 
-  let sortedBookings = bookings?.slice().sort((a, b) => {
-    return (
-      new Date(a.appointment_time).getTime() -
-      new Date(b.appointment_time).getTime()
-    );
-  });
+  let sortedBookings = bookings
+    ?.slice()
+    .sort((a, b) => {
+      return (
+        new Date(a.appointment_time).getTime() -
+        new Date(b.appointment_time).getTime()
+      );
+    })
+    .map(deserializeAppointment);
 
   return (
     <div className="flex-1 p-4 md:mx-16">
@@ -235,6 +239,7 @@ export default function ({ role }: { role: Role }) {
                                   ? sortedBookings
                                       .filter((b) => b.id != v.id)
                                       .concat(newAppointment)
+                                      .map(serializeAppointment)
                                   : []
                               );
 
@@ -246,6 +251,7 @@ export default function ({ role }: { role: Role }) {
                                   ? sortedBookings
                                       .filter((b) => b.id != v.id)
                                       .concat(newAppointment)
+                                      .map(serializeAppointment)
                                   : []
                               );
                             }}

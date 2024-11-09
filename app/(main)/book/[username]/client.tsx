@@ -94,7 +94,7 @@ export default function ({
               worker: username,
               appointment_time: add(new Date(day), {
                 minutes: Number(hour) * Number(slot),
-              }).toString(),
+              }).toISOString(),
             });
 
           if (res.ok) setOpen(true);
@@ -267,9 +267,6 @@ export default function ({
                 onChange={(apps) => {
                   setFieldValue(
                     "time",
-                    apps.find((a) => a.id == "NEW")?.appointment_time
-                  );
-                  console.log(
                     apps.find((a) => a.id == "NEW")?.appointment_time
                   );
                 }}
