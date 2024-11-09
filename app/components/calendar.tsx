@@ -181,13 +181,13 @@ export function WeekView({
 
   function previousWeek() {
     let firstDayNext = sub(firstDayCurrentWeek, { weeks: 1 });
-    onChangeDate && onChangeDate(firstDayNext.toString());
+    onChangeDate && onChangeDate(firstDayNext.toISOString());
     setCurrentWeek(format(firstDayNext, "RRRR-II"));
   }
 
   function nextWeek() {
     let firstDayNext = add(firstDayCurrentWeek, { weeks: 1 });
-    onChangeDate && onChangeDate(firstDayNext.toString());
+    onChangeDate && onChangeDate(firstDayNext.toISOString());
     setCurrentWeek(format(firstDayNext, "RRRR-II"));
   }
 
@@ -263,11 +263,13 @@ export function WeekView({
           >
             {bookings.map((appointment) => {
               if (
-                days.some((day) => isSameDay(appointment.appointment_time, day))
+                days.some((day) =>
+                  isSameDay(appointment.appointment_time.toISOString(), day)
+                )
               )
                 return (
                   days.some((day) =>
-                    isSameDay(appointment.appointment_time, day)
+                    isSameDay(appointment.appointment_time.toISOString(), day)
                   ) && (
                     <Event
                       week={currentWeek}
@@ -276,9 +278,9 @@ export function WeekView({
                       appointment={{
                         ...appointment,
                         appointment_time:
-                          appointment.appointment_time.toString(),
+                          appointment.appointment_time.toISOString(),
                       }}
-                      firstDay={days[0].toString()}
+                      firstDay={days[0].toISOString()}
                       appointments={bookings}
                       onChange={onChange ?? (() => null)}
                       mutable={mutable || appointment.id == "NEW"}
@@ -322,6 +324,7 @@ let Event = memo<EventProps>(function ({
 }) {
   let y = useMotionValue(0);
   let x = useMotionValue(0);
+  let offset = new Date().getTimezoneOffset();
 
   let dull, bright, text;
 
@@ -355,6 +358,7 @@ let Event = memo<EventProps>(function ({
 
   let date = useTransform(y, (value) => {
     let res = new Date(appointment.appointment_time);
+
     let hi = constraintsRef.current?.getBoundingClientRect().height ?? 912;
 
     res.setHours(Math.floor((value / hi) * 24));
@@ -368,7 +372,9 @@ let Event = memo<EventProps>(function ({
   });
 
   useEffect(() => {
-    let appointment_time = new Date(appointment.appointment_time);
+    let appointment_time = add(new Date(appointment.appointment_time), {
+      minutes: offset,
+    });
     let height = constraintsRef.current?.getBoundingClientRect().height ?? 0;
     let width = constraintsRef.current?.getBoundingClientRect().width ?? 0;
 
@@ -430,6 +436,8 @@ let Event = memo<EventProps>(function ({
         0,
         0
       );
+
+      app.appointment_time = sub(app.appointment_time, { minutes: offset });
     }
 
     let ap = app != undefined ? [app] : [];
@@ -531,20 +539,19 @@ export function MonthView({
 
   function previousMonth() {
     let firstDayNextMonth = sub(firstDayCurrentMonth, { months: 1 });
-    onUpdateDate && onUpdateDate(firstDayNextMonth.toString());
+    onUpdateDate && onUpdateDate(firstDayNextMonth.toISOString());
     setCurrentMonth(format(firstDayNextMonth, "MMM-yyyy"));
   }
 
   function nextMonth() {
     let firstDayNextMonth = add(firstDayCurrentMonth, { months: 1 });
-    onUpdateDate && onUpdateDate(firstDayNextMonth.toString());
+    onUpdateDate && onUpdateDate(firstDayNextMonth.toISOString());
     setCurrentMonth(format(firstDayNextMonth, "MMM-yyyy"));
   }
 
   let timerRef = useRef<number | null>(null);
 
   let clear = useCallback(() => {
-    console.log(timerRef.current);
     if (timerRef.current) clearTimeout(timerRef.current);
   }, []);
 
@@ -637,12 +644,13 @@ export function MonthView({
 
                     let app = bookings.find((a) => a.id == id);
 
-                    if (app)
+                    if (app) {
                       app.appointment_time.setFullYear(
                         day.getFullYear(),
                         day.getMonth(),
                         day.getDate()
                       );
+                    }
 
                     newAppointments["push"](app!);
 

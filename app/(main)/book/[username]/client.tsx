@@ -267,17 +267,17 @@ export default function ({
                 onChange={(apps) => {
                   setFieldValue(
                     "time",
-                    apps.find((a) => a.id == "NEW")?.appointment_time.toString()
+                    apps.find((a) => a.id == "NEW")?.appointment_time
                   );
                   console.log(
-                    apps.find((a) => a.id == "NEW")?.appointment_time.toString()
+                    apps.find((a) => a.id == "NEW")?.appointment_time
                   );
                 }}
                 bookings={[...(data ?? [])].concat([
                   {
-                    appointment_time: start.toString(),
-                    created_at: new Date().toString(),
-                    updated_at: new Date().toString(),
+                    appointment_time: start.toISOString(),
+                    created_at: new Date().toISOString(),
+                    updated_at: new Date().toISOString(),
                     //@ts-ignore
                     email: values.email,
                     id: "NEW" as const,

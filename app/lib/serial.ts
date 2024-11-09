@@ -15,7 +15,7 @@ export function serializeAppointment(a: Appointment) {
 
   return {
     ...rest,
-    appointment_time: appointment_time.toString(),
+    appointment_time: appointment_time.toISOString(),
     created_at: created_at.toString(),
     updated_at: updated_at.toString(),
   };

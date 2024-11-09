@@ -35,7 +35,7 @@ import useSWR from "swr";
 import { twJoin } from "tailwind-merge";
 
 function CalendarView({ role }: { role: Role }) {
-  let [month, setMonth] = useState(new Date().toString());
+  let [month, setMonth] = useState(new Date().toISOString());
 
   let [tab, setTab] = useQueryState("view", parseAsInteger.withDefault(0));
   let bookings = useMap<string>();
