@@ -14,13 +14,12 @@ let createPool = () => {
   });
 };
 
-
 pool ??= createPool();
 
 let createDB = () => {
-  return new Kysely<DB>({ dialect: new PostgresDialect({ pool }) })
-}
+  return new Kysely<DB>({ dialect: new PostgresDialect({ pool }) });
+};
 
-db ??= createDB()
+db ??= createDB();
 
-export { pool, db };
+export { db, pool };

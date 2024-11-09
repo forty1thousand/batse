@@ -372,9 +372,7 @@ let Event = memo<EventProps>(function ({
   });
 
   useEffect(() => {
-    let appointment_time = add(new Date(appointment.appointment_time), {
-      minutes: offset,
-    });
+    let appointment_time = new Date(appointment.appointment_time);
     let height = constraintsRef.current?.getBoundingClientRect().height ?? 0;
     let width = constraintsRef.current?.getBoundingClientRect().width ?? 0;
 
