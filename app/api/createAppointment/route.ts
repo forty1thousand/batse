@@ -1,15 +1,11 @@
 import { db } from "@/app/lib/db";
 import { NewAppointment } from "@/app/lib/types";
-import { add, format } from "date-fns";
+import { format } from "date-fns";
 import { NextRequest, NextResponse } from "next/server";
 
 export async function POST(req: NextRequest) {
   let { appointment_time, description, email, worker, slot } =
     (await req.json()) as NewAppointment;
-
-  let offset = new Date(appointment_time).getTimezoneOffset();
-
-  appointment_time = add(appointment_time, { minutes: offset }).toISOString();
 
   if (description.length >= 540)
     return NextResponse.json({

@@ -324,7 +324,6 @@ let Event = memo<EventProps>(function ({
 }) {
   let y = useMotionValue(0);
   let x = useMotionValue(0);
-  let offset = new Date().getTimezoneOffset();
 
   let dull, bright, text;
 
@@ -434,8 +433,6 @@ let Event = memo<EventProps>(function ({
         0,
         0
       );
-
-      app.appointment_time = sub(app.appointment_time, { minutes: offset });
     }
 
     let ap = app != undefined ? [app] : [];

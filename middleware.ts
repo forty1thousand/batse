@@ -10,17 +10,17 @@ import { NextRequest, NextResponse } from "next/server";
 let redis = Redis.fromEnv();
 
 let ratelimit = new Ratelimit({
-  limiter: Ratelimit.slidingWindow(25, "1500ms"),
+  limiter: Ratelimit.cachedFixedWindow(36, "11s"),
   redis,
 });
 
 export default async function (request: NextRequest) {
   let signedIn = request.cookies.has("zid");
-  let ip = request.ip ?? "";
+  let ip = request.ip ?? "null";
 
-  console.log(ip);
+  let { success, remaining } = await ratelimit.limit(ip);
 
-  let { success } = await ratelimit.limit(ip);
+  console.log(ip, success, remaining);
 
   if (!success) {
     return NextResponse.next({ status: 429 });
