@@ -1,29 +1,26 @@
-import { Ratelimit } from "@upstash/ratelimit";
-import { Redis } from "@upstash/redis";
 import { NextRequest, NextResponse } from "next/server";
+import { LRUCache } from "lru-cache";
 
-// let ratelimit = new Ratelimit({
-//   redis,
-//   limiter: Ratelimit.slidingWindow(15, "1500ms"),
-// });
-
-let redis = Redis.fromEnv();
-
-let ratelimit = new Ratelimit({
-  limiter: Ratelimit.cachedFixedWindow(36, "11s"),
-  redis,
+let cache = new LRUCache<string, number>({
+  max: 128,
+  ttl: 10_000,
+  noUpdateTTL: true,
 });
 
 export default async function (request: NextRequest) {
   let signedIn = request.cookies.has("zid");
-  let ip = request.ip ?? "null";
+  let ip = request.ip ?? "NO-IP";
 
-  let { success, remaining } = await ratelimit.limit(ip);
+  let n = cache.get(ip) ?? 1;
+  cache.set(ip, n + 1);
 
-  console.log(ip, success, remaining);
+  console.log(ip, n, cache.size);
 
-  if (!success) {
-    return NextResponse.next({ status: 429 });
+  if (n >= 38) {
+    return new NextResponse("429 Too many requests.", {
+      status: 429,
+      headers: { "Content-Type": "text/plain" },
+    });
   }
 
   if (
