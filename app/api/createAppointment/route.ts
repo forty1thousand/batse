@@ -33,7 +33,9 @@ export async function POST(req: NextRequest) {
       text: `You made an appointment with ${worker}. As of now it is happening on ${format(
         appointment_time,
         "MMMM do yyyy"
-      )} at ${format(appointment_time, "hh:mm a")}`,
+      )} at ${format(appointment_time, "hh:mm a")} ${
+        Intl.DateTimeFormat().resolvedOptions().timeZone
+      }`,
     }),
   });
 
