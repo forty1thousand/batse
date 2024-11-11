@@ -47,7 +47,7 @@ export async function updateAppointments(
   let ap = apps.map((a) => ({
     ...a,
     appointment_time: sub(a.appointment_time, {
-      minutes: new Date().getTimezoneOffset(),
+      minutes: 0,
     }).toISOString(),
   }));
 
@@ -139,7 +139,7 @@ export async function createAppointment({
     body: JSON.stringify({
       ...data,
       appointment_time: sub(appointment_time, {
-        minutes: new Date().getTimezoneOffset(),
+        minutes: 0,
       }).toISOString(),
     }),
     credentials: "same-origin",

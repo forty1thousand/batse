@@ -20,11 +20,12 @@ export default async function (request: NextRequest) {
 
     headers.set("x-rate-limited", "true");
 
-    // Update the ttl after 38 requests have been exceeded in a 10 second span.
+    // Update the ttl after 40 requests have been exceeded in a 10 second span.
     cache.has(ip);
 
-    return NextResponse.next({
-      request: { headers },
+    return new NextResponse("null", {
+      status: 429,
+      headers: { "Content-Type": "text/plain" },
     });
   }
 

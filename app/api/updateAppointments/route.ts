@@ -54,10 +54,7 @@ export async function POST(req: NextRequest) {
         text: `You made an appointment with ${worker}. It is ${status.toLowerCase()}. It has also been updated to happen on ${format(
           appointment_time,
           "MMMM do yyyy"
-        )} at ${format(
-          add(appointment_time, { minutes: new Date().getTimezoneOffset() }),
-          "hh:mm a"
-        )}`,
+        )} at ${format(appointment_time, "hh:mm a")}`,
       }))
     ),
   });
