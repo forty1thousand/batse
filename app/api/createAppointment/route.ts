@@ -1,6 +1,6 @@
 import { db } from "@/app/lib/db";
 import { NewAppointment } from "@/app/lib/types";
-import { format } from "date-fns";
+import { add, format } from "date-fns";
 import { NextRequest, NextResponse } from "next/server";
 
 export async function POST(req: NextRequest) {
@@ -28,19 +28,22 @@ export async function POST(req: NextRequest) {
     },
     body: JSON.stringify({
       to: email,
-      from: "Batse <onboarding@batse.app>",
+      from: "Batse <appointments@batse.app>",
       subject: "Batse - Scheduled appointment with " + worker,
       text: `You made an appointment with ${worker}. As of now it is happening on ${format(
         appointment_time,
         "MMMM do yyyy"
-      )} at ${format(appointment_time, "hh:mm a")}`,
+      )} at ${format(
+        add(appointment_time, { minutes: new Date().getTimezoneOffset() }),
+        "hh:mm a"
+      )}`,
     }),
   });
 
   await db
     .insertInto("appointments")
     .values({
-      appointment_time: new Date(appointment_time),
+      appointment_time,
       description,
       email,
       worker,

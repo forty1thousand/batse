@@ -60,6 +60,7 @@ export async function GET(req: NextRequest) {
       }
     );
 
+    console.log("2");
     res.cookies.set("zid", encrypt(username), {
       sameSite: "strict",
       path: "/",

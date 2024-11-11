@@ -5,6 +5,7 @@ let cache = new LRUCache<string, number>({
   max: 128,
   ttl: 10_000,
   noUpdateTTL: true,
+  updateAgeOnHas: true,
 });
 
 export default async function (request: NextRequest) {
@@ -14,12 +15,16 @@ export default async function (request: NextRequest) {
   let n = cache.get(ip) ?? 1;
   cache.set(ip, n + 1);
 
-  console.log(ip, n, cache.size);
+  if (n >= 40) {
+    let headers = new Headers(request.headers);
 
-  if (n >= 38) {
-    return new NextResponse("429 Too many requests.", {
-      status: 429,
-      headers: { "Content-Type": "text/plain" },
+    headers.set("x-rate-limited", "true");
+
+    // Update the ttl after 38 requests have been exceeded in a 10 second span.
+    cache.has(ip);
+
+    return NextResponse.next({
+      request: { headers },
     });
   }
 
@@ -37,5 +42,5 @@ export default async function (request: NextRequest) {
     return NextResponse.redirect(new URL("/my/profile", request.url));
   }
 
-  return null;
+  return NextResponse.next();
 }

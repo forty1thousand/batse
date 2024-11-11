@@ -47,7 +47,7 @@ export interface AppointmentsTable {
   worker: string;
   status: Generated<Status>;
   description: string;
-  appointment_time: Date;
+  appointment_time: string;
   slot: Generated<number>;
   created_at: Generated<Date>;
   updated_at: Generated<Date>;

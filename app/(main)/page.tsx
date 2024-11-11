@@ -1,9 +1,9 @@
-import { CalendarMonth, CalendarWeek } from "@/app/(main)/calendar";
 import { LinkButton } from "@/app/components/button";
 import { Line } from "@/app/components/line";
 import { GenericHeader, Headline, Subtle } from "@/app/components/text";
 import { Metadata } from "next";
 import dynamic from "next/dynamic";
+import { headers } from "next/headers";
 
 export let metadata: Metadata = {
   title: "Batse",
@@ -27,6 +27,16 @@ let Client = dynamic(() => import("@/app/(main)/client"), {
     );
   },
 });
+
+let CalendarMonth = dynamic(
+  () => import("@/app/(main)/calendar").then((mod) => mod.CalendarMonth),
+  { ssr: false }
+);
+
+let CalendarWeek = dynamic(
+  () => import("@/app/(main)/calendar").then((mod) => mod.CalendarWeek),
+  { ssr: false }
+);
 
 export default function () {
   return (

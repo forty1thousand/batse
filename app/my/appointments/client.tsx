@@ -107,7 +107,14 @@ function CalendarView({ role }: { role: Role }) {
                   onClick={async () => {
                     setState(true);
                     try {
-                      await updateAppointments([...bookings.values()]);
+                      await updateAppointments(
+                        [...bookings.values()]
+                          .filter((v) => v.changed == true)
+                          .map((v) => {
+                            let { changed, ...p } = v;
+                            return p;
+                          })
+                      );
                     } finally {
                       setState(false);
                     }

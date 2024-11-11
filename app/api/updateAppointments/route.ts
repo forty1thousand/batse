@@ -2,7 +2,8 @@ import { decrypt } from "@/app/lib/cookie";
 import { db } from "@/app/lib/db";
 import { deserializeAppointment } from "@/app/lib/serial";
 import { SerializedAppointment } from "@/app/lib/types";
-import { format } from "date-fns";
+import { add, format } from "date-fns";
+import { sql } from "kysely";
 import { NextRequest, NextResponse } from "next/server";
 
 export async function POST(req: NextRequest) {
@@ -33,33 +34,35 @@ export async function POST(req: NextRequest) {
 
   db.transaction().execute(async (trx) => {
     for (let app of appointments) {
-      let deserializedAppointment = deserializeAppointment(app);
-      await trx
-        .updateTable("appointments")
-        .set({ ...deserializedAppointment })
-        .where("id", "=", app.id)
-        .execute();
+      await sql`UPDATE appointments SET appointment_time = ${app.appointment_time}, status = ${app.status} WHERE id = ${app.id}`.execute(
+        trx
+      );
     }
   });
 
-  appointments.forEach(async ({ email, worker, appointment_time, status }) => {
-    await fetch("https://api.resend.com/emails", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${process.env.RESEND_TOKEN}`,
-      },
-      body: JSON.stringify({
+  await fetch("https://api.resend.com/emails/batch", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${process.env.RESEND_TOKEN}`,
+    },
+    body: JSON.stringify(
+      appointments.map(({ email, worker, appointment_time, status }) => ({
         to: email,
-        from: "Batse <onboarding@batse.app>",
+        from: "Batse <updates@batse.app>",
         subject: `Batse - Appointment with ${worker} updated!`,
         text: `You made an appointment with ${worker}. It is ${status.toLowerCase()}. It has also been updated to happen on ${format(
           appointment_time,
           "MMMM do yyyy"
-        )} at ${format(appointment_time, "hh:mm a")}`,
-      }),
-    })
+        )} at ${format(
+          add(appointment_time, { minutes: new Date().getTimezoneOffset() }),
+          "hh:mm a"
+        )}`,
+      }))
+    ),
   });
+
+  console.log(appointments[0].appointment_time);
 
   return NextResponse.json({});
 }

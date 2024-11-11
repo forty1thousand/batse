@@ -433,6 +433,9 @@ let Event = memo<EventProps>(function ({
         0,
         0
       );
+
+      // @ts-ignore
+      app.changed = true;
     }
 
     let ap = app != undefined ? [app] : [];
@@ -645,6 +648,8 @@ export function MonthView({
                         day.getMonth(),
                         day.getDate()
                       );
+                      // @ts-ignore
+                      app.changed = true;
                     }
 
                     newAppointments["push"](app!);

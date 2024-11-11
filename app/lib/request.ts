@@ -138,7 +138,9 @@ export async function createAppointment({
     method: "POST",
     body: JSON.stringify({
       ...data,
-      appointment_time: appointment_time,
+      appointment_time: sub(appointment_time, {
+        minutes: new Date().getTimezoneOffset(),
+      }).toISOString(),
     }),
     credentials: "same-origin",
   });
