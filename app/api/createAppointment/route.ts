@@ -43,7 +43,9 @@ export async function POST(req: NextRequest) {
   await db
     .insertInto("appointments")
     .values({
-      appointment_time,
+      appointment_time: add(appointment_time, {
+        minutes: new Date().getTimezoneOffset(),
+      }),
       description,
       email,
       worker,
