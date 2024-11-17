@@ -1,19 +1,9 @@
 "use client";
-import { Line } from "@/app/components/line";
 import { motion } from "framer-motion";
 
 export default function () {
   return (
-    <section className="bg-background relative py-4 h-fit">
-      <motion.p
-        initial={{ clipPath: "inset(0 0 0 100%)" }}
-        animate={{ clipPath: "inset(0 0 0 0)" }}
-        transition={{ duration: 0.75, ease: "easeOut" }}
-        style={{ mixBlendMode: "difference" }}
-        className="text-2xl font-thin text-left text-white"
-      >
-        Batse
-      </motion.p>
+    <section className="bg-background relative py-4 h-[40rem]">
       <div className="relative">
         <motion.div
           className="h-full w-full absolute invert bg-background bottom-0"
@@ -31,12 +21,11 @@ export default function () {
           animate={{ clipPath: "inset(0 0 0 0)" }}
           transition={{ duration: 2, ease: "easeOut" }}
           style={{ mixBlendMode: "difference" }}
-          className="text-7xl lg:text-9xl font-bold text-left relative text-white"
+          className="text-7xl lg:text-[11rem] font-bold text-left relative text-white"
         >
           Book appointments online.
         </motion.p>
       </div>
-      <Line className="my-4" dotted />
       <motion.p
         initial={{ clipPath: "inset(100% 0 0 0)" }}
         animate={{ clipPath: "inset(0 0 0 0)" }}

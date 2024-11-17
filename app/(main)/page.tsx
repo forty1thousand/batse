@@ -1,9 +1,11 @@
 import { LinkButton } from "@/app/components/button";
+import { MonthView, WeekView } from "@/app/components/calendar";
+import { Select } from "@/app/components/form";
 import { Line } from "@/app/components/line";
-import { GenericHeader, Headline, Subtle } from "@/app/components/text";
+import { GenericHeader, Headline, Small, Subtle } from "@/app/components/text";
+import { startOfDay } from "date-fns";
 import { Metadata } from "next";
 import dynamic from "next/dynamic";
-import { headers } from "next/headers";
 
 export let metadata: Metadata = {
   title: "Batse",
@@ -14,12 +16,10 @@ let Client = dynamic(() => import("@/app/(main)/client"), {
   ssr: false,
   loading() {
     return (
-      <section className="bg-background relative py-4 h-fit">
-        <p className="text-2xl font-thin text-left">Batse</p>
-        <p className="text-7xl lg:text-9xl font-bold mx-auto text-left">
+      <section className="bg-background relative h-[40rem] py-4">
+        <p className="text-7xl lg:text-[11rem] font-bold mx-auto text-left">
           Book appointments online.
         </p>
-        <Line className="my-4" dotted />
         <p className="text-5xl font-medium text-left text-subtle pb-2">
           The simple way to manage appointments & share booking links.
         </p>
@@ -42,20 +42,6 @@ export default function () {
   return (
     <main className="px-2">
       <Client />
-      {/* <Headline className="text-subtle text-right">
-        The <span className="text-primary">simplest</span> way to manage
-        appointments.
-      </Headline>
-
-      <LinkButton
-        href="/signup"
-        className="font-medium text-lg w-fit ml-auto my-10 p-5 rounded-xl items-center"
-      >
-        Sign up <ChevronRight className="size-5" />
-      </LinkButton>
-
-      <WeekView mutable bookings={bookings} /> */}
-
       <section className="min-h-screen from-faint/35 bg-[radial-gradient(at_top,rgb(var(--faint)_/_0.5),transparent,transparent)] to-transparent my-20 p-4 border-t border-faint">
         <Headline className="font-semibold text-base text-center text-subtle">
           BUILT FOR BUSINESS
@@ -69,30 +55,198 @@ export default function () {
         <Subtle className="text-center mt-2 text-lg">
           Our software is designed for ease of use and quickness.
         </Subtle>
-        <div className="grid lg:grid-cols-2 gap-x-4 mt-16">
+        <div className="grid lg:grid-cols-3 w-full gap-8 my-12 h-fit *:bg-background/45 *:backdrop-blur *:shadow-sm *:border *:border-faint *:rounded-3xl *:p-2">
           <div>
-            <GenericHeader h2 className="text-left text-2xl font-semibold">
-              On your end
-            </GenericHeader>
-            <ul className="mx-20 list-disc list-inside text-subtle text-lg">
-              <li>
-                Share an appointment link & have customers schedule
-                appointments.
-              </li>
-              <li>Create and manage employee profiles.</li>
-              <li>Accept or reject incoming appointments.</li>
-              <li>See and move your appointments around on a calendar.</li>
-            </ul>
+            <div className="flex">
+              <div className="m-2 h-24 mb-4">
+                <GenericHeader h2>Schedule</GenericHeader>
+                <Subtle>
+                  Have customers book with you online using a calendar.
+                </Subtle>
+              </div>
+              <LinkButton
+                className="ml-auto py-0 px-2 h-fit w-fit rounded-full"
+                variant="text"
+                href="/book/benawad"
+              >
+                See <span className="text-xl font-thin ml-1.5">&rsaquo;</span>
+              </LinkButton>
+            </div>
+            <div className="w-full h-64 border border-faint rounded-3xl bg-faint/20 relative overflow-hidden">
+              <div className="absolute inset-0 h-full w-full bg-background bg-[radial-gradient(rgb(var(--faint)/1)_1px,transparent_1px)] [background-size:12px_12px] [mask-image:radial-gradient(ellipse_70%_70%_at_50%_50%,#000_60%,transparent_100%)]" />
+              <div className="absolute z-20 left-28 top-2 right-2 border border-faint rounded-xl bg-background p-2 overflow-hidden">
+                <div className="scale-75 -translate-y-40">
+                  <GenericHeader className="leading-tight" h2>
+                    Book appointment with _
+                  </GenericHeader>
+                  <Subtle className="mb-4">
+                    We'll send you an email once your appointment has been
+                    scheduled.
+                  </Subtle>
+                  <WeekView
+                    start={startOfDay(new Date(2013, 8, 5)).toISOString()}
+                    bookings={[]}
+                  />
+                </div>
+              </div>
+              <div className="absolute opacity-55 z-10 left-2 top-10 right-16 border border-faint rounded-xl bg-background p-2 overflow-hidden">
+                <div className="scale-75 -translate-y-40">
+                  <GenericHeader className="leading-tight" h2>
+                    Book appointment with _
+                  </GenericHeader>
+                  <Subtle className="mb-4">
+                    We'll send you an email once your appointment has been
+                    scheduled.
+                  </Subtle>
+                  <WeekView
+                    start={startOfDay(new Date(2025, 4, 14)).toISOString()}
+                    bookings={[]}
+                  />
+                </div>
+              </div>
+            </div>
           </div>
-          <div>
-            <GenericHeader h2 className="text-left text-2xl mt-5 font-semibold">
-              On your customers end
-            </GenericHeader>
-            <ul className="mx-20 list-disc list-inside text-subtle text-lg">
-              <li>Create appointments online.</li>
-              <li>Get an email update upon acceptance.</li>
-              <li>Select their choice of time.</li>
-            </ul>
+          <div className="lg:col-span-2">
+            <div className="m-2 h-24 mb-4">
+              <GenericHeader h2>Manage</GenericHeader>
+              <Subtle>
+                Manage your incoming appointments — a change will notify your
+                customer.
+              </Subtle>
+            </div>
+            <div className="w-full h-64 border border-faint rounded-3xl bg-faint/20 relative overflow-hidden">
+              <div className="absolute inset-0 h-full w-full bg-background bg-[radial-gradient(rgb(var(--faint)/1)_1px,transparent_1px)] [background-size:12px_12px] [mask-image:radial-gradient(ellipse_70%_70%_at_50%_50%,#000_60%,transparent_100%)]" />
+              <div className="absolute z-20 left-1/2 top-2 right-2 border border-faint rounded-xl bg-background p-2 overflow-hidden">
+                <div className="scale-75 -translate-y-12">
+                  <GenericHeader className="mb-4">
+                    Upcoming appointments
+                  </GenericHeader>
+                  <div className="p-4 w-full border-faint border mb-4 rounded-lg">
+                    <div className="flex w-full">
+                      <p className="text-center w-fit font-semibold">
+                        <span className="text-3xl">09</span>
+                        <br />
+                        <span className="text-subtle font-light">Tues</span>
+                      </p>
+                      <Line variant="vertical" className="mx-2" />
+                      <div className="grid grid-rows-2 items-center">
+                        <Small>
+                          03:00 AM to 03:30 AM _____@_____.com with ___
+                        </Small>
+                        <div className="flex gap-x-2 items-center">
+                          <Select
+                            defaultValue="ACCEPTED"
+                            className="font-mono font-light text-primary min-w-28"
+                          >
+                            <option disabled value="AWAITING">
+                              AWAITING
+                            </option>
+                            <option disabled value="REJECTED">
+                              REJECTED
+                            </option>
+                            <option disabled value="ACCEPTED">
+                              ACCEPTED
+                            </option>
+                          </Select>
+                          <div
+                            title="ACCEPTED"
+                            className={
+                              "relative size-fit *:size-2 *:rounded-full *:bg-green-500"
+                            }
+                          >
+                            <div />
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <Line className="my-2" />
+                    <GenericHeader className="text-base font-medium">
+                      Description
+                    </GenericHeader>
+                    <Subtle>
+                      Hello, I would like to book and appointment with you.
+                    </Subtle>
+                  </div>
+                  <div className="p-4 w-full border-faint border mb-4 rounded-lg">
+                    <div className="flex w-full">
+                      <p className="text-center w-fit font-semibold">
+                        <span className="text-3xl">09</span>
+                        <br />
+                        <span className="text-subtle font-light">Tues</span>
+                      </p>
+                      <Line variant="vertical" className="mx-2" />
+                      <div className="grid grid-rows-2 items-center">
+                        <Small>
+                          03:00 AM to 03:30 AM _____@_____.com with ___
+                        </Small>
+                        <div className="flex gap-x-2 items-center">
+                          <Select
+                            defaultValue="ACCEPTED"
+                            className="font-mono font-light text-primary min-w-28"
+                          >
+                            <option disabled value="AWAITING">
+                              AWAITING
+                            </option>
+                            <option disabled value="REJECTED">
+                              REJECTED
+                            </option>
+                            <option disabled value="ACCEPTED">
+                              ACCEPTED
+                            </option>
+                          </Select>
+                          <div
+                            title="ACCEPTED"
+                            className={
+                              "relative size-fit *:size-2 *:rounded-full *:bg-green-500"
+                            }
+                          >
+                            <div />
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <Line className="my-2" />
+                  <GenericHeader className="text-base font-medium">
+                    Description
+                  </GenericHeader>
+                  <Subtle>
+                    Hello, I would like to book and appointment with you.
+                  </Subtle>
+                </div>
+              </div>
+              <div className="absolute z-10 right-[45%] top-4 left-2 border border-faint rounded-xl bg-background p-2 overflow-hidden">
+                <div className="scale-75 -translate-y-24">
+                  <MonthView
+                    start={startOfDay(new Date(2030, 4, 9)).toISOString()}
+                    bookings={[
+                      {
+                        appointment_time: new Date(2030, 4, 4).toISOString(),
+                        created_at: "",
+                        description: "",
+                        email: "",
+                        id: "abasbd",
+                        slot: 3,
+                        status: "ACCEPTED",
+                        updated_at: "",
+                        worker: "",
+                      },
+                      {
+                        appointment_time: new Date(2030, 4, 5, 7).toISOString(),
+                        created_at: "",
+                        description: "",
+                        email: "",
+                        id: "abasbd",
+                        slot: 3,
+                        status: "AWAITING",
+                        updated_at: "",
+                        worker: "",
+                      },
+                    ]}
+                  />
+                </div>
+              </div>
+            </div>
           </div>
         </div>
         <GenericHeader h2 className="text-left text-5xl mt-48 font-semibold">
@@ -111,7 +265,14 @@ export default function () {
         </Subtle>
         <CalendarWeek />
       </section>
-
+      <iframe
+        className="mx-auto mt-20 rounded-xl ring-4 ring-faint/70 w-full h-[720px] max-w-[1280px]"
+        src="https://www.youtube-nocookie.com/embed/aAogiM1il94?si=1ILuDqDipioLn8pf"
+        title="YouTube video player"
+        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+        referrerPolicy="strict-origin-when-cross-origin"
+        allowFullScreen
+      />
       <GenericHeader
         h2
         className="text-center text-7xl mt-40 font-semibold mb-10"

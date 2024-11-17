@@ -2,12 +2,7 @@ import { LinkButton } from "@/app/components/button";
 import { ArrowLeft } from "lucide-react";
 import dynamic from "next/dynamic";
 
-let Donut = dynamic(() => import("@/app/donut"), {
-  ssr: false,
-  loading() {
-    return <></>
-  }
-});
+let Donut = dynamic(() => import("@/app/donut"), { ssr: false });
 
 export default function () {
   return (
@@ -24,7 +19,7 @@ export default function () {
           <ArrowLeft className="stroke-[3px] stroke-muted w-3" />
           Back
         </LinkButton>
-        <div className="w-[30rem] invert dark:filter-none opacity-50 h-[30rem]">
+        <div className="size-[30rem] invert dark:filter-none opacity-50">
           <Donut />
         </div>
       </div>

@@ -18,7 +18,7 @@ export default async function (request: NextRequest) {
   if (n >= 40) {
     let headers = new Headers(request.headers);
 
-    headers.set("x-rate-limited", "true");
+    if (n % 100) console.log(n, cache.getRemainingTTL(ip), ip);
 
     // Update the ttl after 40 requests have been exceeded in a 10 second span.
     cache.has(ip);
