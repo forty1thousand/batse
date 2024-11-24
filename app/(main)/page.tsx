@@ -266,7 +266,7 @@ export default function () {
         <CalendarWeek />
       </section>
       <iframe
-        className="mx-auto mt-20 rounded-xl ring-4 ring-faint/70 w-full h-[720px] max-w-[1280px]"
+        className="mx-auto mt-20 rounded-xl ring-4 ring-faint/70 w-[300px] md:w-[620px] lg:w-[800px] h-[720px] max-w-[1280px]"
         src="https://www.youtube-nocookie.com/embed/aAogiM1il94?si=1ILuDqDipioLn8pf"
         title="YouTube video player"
         allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"

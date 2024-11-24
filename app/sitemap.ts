@@ -5,7 +5,7 @@ export default function (): MetadataRoute.Sitemap {
     {
       url: process.env.NEXT_PUBLIC_BASE_URL!,
       priority: 1,
-      changeFrequency: "yearly",
+      changeFrequency: "monthly",
       lastModified: new Date(),
     },
     {
@@ -16,14 +16,20 @@ export default function (): MetadataRoute.Sitemap {
     },
     {
       url: `${process.env.NEXT_PUBLIC_BASE_URL!}/login`,
-      priority: 0.5,
+      priority: 0.2,
       changeFrequency: "yearly",
       lastModified: new Date(),
     },
     {
       url: `${process.env.NEXT_PUBLIC_BASE_URL!}/search`,
-      priority: 0.5,
+      priority: 0.3,
       changeFrequency: "yearly",
+      lastModified: new Date(),
+    },
+    {
+      url: `${process.env.NEXT_PUBLIC_BASE_URL!}/blog`,
+      priority: 0.7,
+      changeFrequency: "weekly",
       lastModified: new Date(),
     },
   ];

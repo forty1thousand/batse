@@ -16,14 +16,12 @@ export default async function (request: NextRequest) {
   cache.set(ip, n + 1);
 
   if (n >= 40) {
-    let headers = new Headers(request.headers);
-
     if (n % 100) console.log(n, cache.getRemainingTTL(ip), ip);
 
     // Update the ttl after 40 requests have been exceeded in a 10 second span.
     cache.has(ip);
 
-    return new NextResponse("null", {
+    return new NextResponse("429", {
       status: 429,
       headers: { "Content-Type": "text/plain" },
     });
